@@ -1,0 +1,23 @@
+
+type CallRequestResponse{
+  success: Boolean!
+  message: String
+  errors: [Error!]!
+  data: CallRequest
+}
+
+input AnswerInput {
+  offer: Json
+  answer: Json
+  sdp: Json
+}
+
+input CallRequestDataInput{
+  status:CallRequestStatus
+}
+
+input CallRequestUpdateDataInput{
+  status: CallRequestStatus
+  answer: AnswerInput
+}
+

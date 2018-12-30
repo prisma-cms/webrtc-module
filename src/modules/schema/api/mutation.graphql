@@ -1,0 +1,38 @@
+
+type Mutation {
+
+
+  createCallProcessor(
+    to: ID!
+    data: CallCreateInput
+  ): CallResponse!
+
+  updateCallProcessor(
+    data: CallUpdateInput!
+    where: CallWhereUniqueInput!
+  ): CallResponse!
+
+
+  createCallRequestProcessor(
+    data: CallRequestCreateInput!
+  ): CallRequestResponse!
+
+
+  sendIceCandidate(
+    from: String!
+    to: String!
+    sdp: Json!
+    callRequestId: String!
+  ): IceCandidate
+
+  createCallOffer(
+    id: ID!
+    offer: Json!
+  ): CallRequest!
+
+  createAnswer(
+    id: ID!
+    answer: Json!
+  ): CallRequest!
+
+}

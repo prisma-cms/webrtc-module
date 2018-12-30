@@ -1,0 +1,43 @@
+
+enum CallStatus{
+  Requested,
+  Accepted,
+  Rejected,
+  Canceled,
+}
+
+
+type Call {
+  id: ID! @unique
+  createdAt: DateTime!
+  updatedAt: DateTime!
+
+  """Кому идет звонок"""
+  User: User! @relation(name: "UserCalls")
+
+  # Планируемое время разговорав минутах
+  # Возможно надо удалить
+  # planing_time: Int
+
+  # Минимальное время в минутах (для расчета оплаты)
+  # min_time: Int @default(value: 15)
+
+  # hour_price: Float
+
+  # Стоимость минуты в евро
+  # minute_price: Float
+
+  # contract: String
+
+  status: CallStatus! @default(value: "Requested")
+
+
+  Room: ChatRoom! @relation(name: "ChatRoomCall", onDelete: SET_NULL)
+
+  # CallRequests: [CallRequest!]! @relation(name: "CallRequests", onDelete: CASCADE)
+
+  # Transactions: [CallTransaction!]! @relation (name: "CallTransactions")
+
+  CreatedBy: User! @relation (name: "CallsCreatedBy")
+
+}

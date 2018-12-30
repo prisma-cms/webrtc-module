@@ -5,6 +5,11 @@ import chalk from "chalk";
 
 import PrismaModule from "@prisma-cms/prisma-module";
 
+import UserModule from "@prisma-cms/user-module";
+
+import CallModule from "./call";
+import CallRequestModule from "./callRequest";
+
 import MergeSchema from 'merge-graphql-schemas';
 
 import path from 'path';
@@ -28,6 +33,12 @@ class Module extends PrismaModule {
 
     Object.assign(this, {
     });
+
+    this.mergeModules([
+      UserModule,
+      CallModule,
+      CallRequestModule,
+    ]);
 
   }
 

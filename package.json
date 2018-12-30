@@ -1,7 +1,7 @@
 {
-  "name": "@prisma-cms/module-bilerplate",
-  "description": "Module boilerplate for @prisma-cms/server",
-  "version": "1.1.5",
+  "name": "@prisma-cms/webrtc-module",
+  "description": "WebRTC module for @prisma-cms",
+  "version": "1.2.0",
   "main": "src/",
   "files": [
     "src"
@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@prisma-cms/prisma-module": "latest",
+    "@prisma-cms/user-module": "latest",
     "chalk": "^2.4.1",
     "merge-graphql-schemas": "latest"
   },
@@ -37,13 +38,5 @@
     "prisma-cms",
     "server",
     "boilerplate"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/prisma-cms/module-boilerplate.git"
-  },
-  "bugs": {
-    "url": "https://github.com/prisma-cms/module-boilerplate/issues"
-  },
-  "homepage": "https://github.com/prisma-cms/module-boilerplate#readme"
+  ]
 }

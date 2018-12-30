@@ -1,0 +1,30 @@
+
+
+type CallRequest{
+  id: ID! @unique
+  called_descriptions: Json!
+  caller_descriptions: Json!
+  status: CallRequestStatus!
+  startedAt: DateTime
+  endedAt: DateTime
+
+  Called: User! @relation(name: "CallRequestCalled", onDelete: CASCADE)
+  Caller: User! @relation(name: "CallRequestCaller", onDelete: CASCADE)
+
+  Call: Call! @relation(name: "CallRequests", onDelete: CASCADE)
+  # Transaction: CallTransaction @relation (name: "CallTransactionCallRequests", onDelete: SET_NULL)
+}
+
+
+enum CallRequestStatus{
+  Created   # Создается новый запрос на звонок
+  Rejected  # Абонент отменил звонок
+  Accepted  # Абонент принял звонок, создал локальный стрим и PeerConnection и ожидает оффер
+  Started   # Соединения установились и пошел отсчет времени
+  Canceled  # Звонок отменен абонентом
+  Missed    # Пропущен
+  Ended     # Успешно завершен
+  Error     # Ошибка
+  Billed    # Оплачен
+}
+

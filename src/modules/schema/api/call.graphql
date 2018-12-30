@@ -1,0 +1,32 @@
+
+
+
+type CallResponse{
+  success: Boolean!
+  message: String
+  errors: [Error!]!
+  data: Call
+}
+
+
+type CallRequestPayload{
+  success: Boolean!
+  message: String
+  errors: [Error!]!
+  data: CallRequest
+}
+
+type IceCandidate{
+  from: String!
+  to: String!
+  sdp: Json!
+  callRequestId: String!
+}
+
+input CallRequestCreateInput {
+  called_descriptions: Json!
+  caller_descriptions: Json!
+  callId: ID!
+  calledId: ID!
+}
+
