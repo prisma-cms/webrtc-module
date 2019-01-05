@@ -1,13 +1,5 @@
 
 type ChatRoom {
   id: ID! @unique
-  name: String!
-
-  Members: [User!]! @relation(name: "UserChatRooms")
-  CreatedBy: User! @relation(name: "ChatRoomCreatedBy", onDelete: SET_NULL)
-
-  Messages: [ChatMessage!]! @relation(name: "ChatRoomMessages")
-
   Call: Call @relation(name: "ChatRoomCall", onDelete: CASCADE)
 }
-

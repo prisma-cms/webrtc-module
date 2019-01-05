@@ -6,6 +6,7 @@ import chalk from "chalk";
 import PrismaModule from "@prisma-cms/prisma-module";
 
 import UserModule from "@prisma-cms/user-module";
+import SocietyModule from "@prisma-cms/society-module";
 
 import CallModule from "./call";
 import CallRequestModule from "./callRequest";
@@ -36,6 +37,7 @@ class Module extends PrismaModule {
 
     this.mergeModules([
       UserModule,
+      SocietyModule,
       CallModule,
       CallRequestModule,
     ]);
@@ -72,6 +74,14 @@ class Module extends PrismaModule {
 
     if (fs.existsSync(schemaFile)) {
       baseSchema = fs.readFileSync(schemaFile, "utf-8");
+
+      baseSchema = this.cleanupApiSchema(baseSchema, [
+        "ChatRoomCreateInput",
+        "ChatRoomUpdateInput",
+        "ChatMessageCreateInput",
+        "ChatMessageUpdateInput",
+      ]);
+
     }
 
     let apiSchema = super.getApiSchema(types.concat(baseSchema), []);
