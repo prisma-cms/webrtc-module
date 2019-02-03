@@ -61,11 +61,10 @@ class CallRequestProcessor extends PrismaProcessor {
     const {
       request,
       db,
-      setRequestTimeLimit,
     } = ctx
 
 
-    setRequestTimeLimit(ctx, 300);
+    this.setRequestTimeLimit(300);
 
     // return new Promise(() => {
 
@@ -75,8 +74,10 @@ class CallRequestProcessor extends PrismaProcessor {
 
     let {
       data: {
-        callId,
-        calledId,
+        // callId,
+        // calledId,
+        Called,
+        Caller,
         ...data
       },
       ...otherArgs
@@ -88,11 +89,22 @@ class CallRequestProcessor extends PrismaProcessor {
     }
 
 
-    const Caller = await this.getUser(true);
+    const currentUser = await this.getUser(true);
 
     const {
-      id: callerId,
-    } = Caller;
+      id: currentUserId,
+    } = currentUser;
+
+
+    Caller = {
+      connect: {
+        id: currentUserId,
+      },
+    }
+
+    // const {
+    //   id: callerId,
+    // } = Caller;
 
 
     /**
@@ -104,21 +116,21 @@ class CallRequestProcessor extends PrismaProcessor {
     // }, ctx);
 
 
-    const Call = await db.query.call({
-      where: {
-        id: callId,
-      },
-    });
+    // const Call = await db.query.call({
+    //   where: {
+    //     id: callId,
+    //   },
+    // });
 
 
-    if (!Call) {
-      return this.addError("Can not get call object");
-    }
+    // if (!Call) {
+    //   return this.addError("Can not get call object");
+    // }
 
-    const {
-      min_time,
-      minute_price,
-    } = Call;
+    // const {
+    //   min_time,
+    //   minute_price,
+    // } = Call;
 
 
     // if (minute_price && min_time && (minute_price * min_time > balance)) {
@@ -138,28 +150,37 @@ class CallRequestProcessor extends PrismaProcessor {
 
       data = {
         ...data,
-        Call: {
-          connect: {
-            id: callId,
-          },
-        },
-        Called: {
-          connect: {
-            id: calledId,
-          },
-        },
-        Caller: {
-          connect: {
-            id: callerId,
-          },
-        },
+        Caller,
+        Called,
         status: "Created",
       }
 
       args.data = data;
 
+      const {
+        connect,
+      } = Called || {}
 
-      if (callerId === calledId) {
+      if (!connect) {
+        throw new Error("Не указан целевой пользователь");
+      }
+
+      const called = await db.query.user({
+        where: {
+          ...connect,
+        },
+      });
+
+      if (!called) {
+        throw new Error("Не был получен целевой пользователь");
+      }
+
+      const {
+        calledId,
+      } = called;
+
+
+      if (currentUserId === calledId) {
         return reject(new Error("Can not call yourself"));
       }
 
@@ -174,18 +195,18 @@ class CallRequestProcessor extends PrismaProcessor {
         return reject(new Error("Can not get Caller"));
       }
 
-      const Called = await this.getUser(null, {
-        where: {
-          id: calledId,
-        },
-      })
-        .catch(error => {
-          reject(error);
-        });
+      // const Called = await this.getUser(null, {
+      //   where: {
+      //     id: calledId,
+      //   },
+      // })
+      //   .catch(error => {
+      //     reject(error);
+      //   });
 
-      if (!Called) {
-        return reject(new Error("Can not get Called"));
-      }
+      // if (!Called) {
+      //   return reject(new Error("Can not get Called"));
+      // }
 
       let result;
 
@@ -354,6 +375,9 @@ class CallRequestProcessor extends PrismaProcessor {
                   case "Canceled":
                   case "Missed":
                   case "Error":
+
+                  // ???
+                  case "Ended":
                     resolve(result);
 
                     return;
@@ -383,29 +407,18 @@ class CallRequestProcessor extends PrismaProcessor {
         console.log(chalk.green('callRequest.status === "Created"'), callRequest.status);
         console.log(chalk.green('callRequest.status === "Created" callRequest'), callRequest);
 
-        if (callRequest.status === "Created") {
-          // this.updateCallRequest(null, {
-          //   where: {
-          //     id: callRequest.id,
-          //   },
-          //   data: {
-          //     status: "Missed",
-          //   },
-          // }, ctx)
-          //   .catch(console.error);
-          db.mutation.updateCallRequest({
-            where: {
-              id: callRequest.id,
-            },
-            data: {
-              status: "Missed",
-            },
-          })
-            .catch(console.error);
-        }
-        // }, 1000 * 60 * 0.5);
+        // if (callRequest.status === "Created") {
+        //   db.mutation.updateCallRequest({
+        //     where: {
+        //       id: callRequest.id,
+        //     },
+        //     data: {
+        //       status: "Missed",
+        //     },
+        //   })
+        //     .catch(console.error);
+        // }
       }, 1000 * 60 * 5);
-      // }, 1000 * 5);
 
 
       // setTimeout(() => {
@@ -605,65 +618,116 @@ const callRequestSub = {
 
     // console.log("callRequest ctx connection", ctx.connection);
 
+    const {
+      currentUser,
+    } = ctx;
+
+    const {
+      id: currentUserId,
+    } = currentUser || {};
+
+    // console.log("currentUserId", currentUserId);
+
+    // if (!currentUserId) {
+    //   throw new Error("Необходимо авторизоваться");
+    // }
+
+    let OR = [];
+
+    if (!currentUserId) {
+      // throw new Error("Необходимо авторизоваться");
+      // return "Необходимо авторизоваться";
+      // OR = [
+      //   {
+      //     User: {
+      //       id: "null",
+      //     },
+      //   },
+      // ];
+      OR = [{
+        Called: {
+          id: "null",
+        }
+      }, {
+        Caller: {
+          id: "null",
+        }
+      }];
+    }
+    else {
+      OR = [{
+        Called: {
+          id: currentUserId,
+        }
+      }, {
+        Caller: {
+          id: currentUserId,
+        }
+      }];
+    }
+
+    // return ;
+
     let {
-      where: {
-        token,
-        ...where
-      },
+      where,
       ...other
     } = args;
 
 
+    // let {
+    //   node,
+    // } = where || {};
 
-    // const userId = await getUserId(ctx, token);
-
-    // if (!userId) {
-    //   throw (new Error("Authorization required"))
+    // where = {
+    //   ...where,
+    //   node: {
+    //     ...node,
+    //     OR: [{
+    //       Called: {
+    //         id: userId,
+    //       }
+    //     }, {
+    //       Caller: {
+    //         id: userId,
+    //       }
+    //     }]
+    //   },
     // }
 
-
-
-    let {
-      node,
-    } = where || {};
-
     where = {
-      ...where,
-      node: {
-        ...node,
-        OR: [{
-          Called: {
-            id: userId,
-          }
-        }, {
-          Caller: {
-            id: userId,
-          }
-        }]
-      },
+      AND: [
+        {
+          ...where,
+        },
+        {
+          node: {
+            OR,
+          },
+        },
+      ],
     }
 
     // console.log(chalk.green("callRequestSub userId"), userId);
     // console.log(chalk.green("callRequestSub where"), where);
 
     // Очищаем все аргументы
-    info.fieldNodes.map(n => {
-      n.arguments = []
-    });
+    // info.fieldNodes.map(n => {
+    //   n.arguments = []
+    // });
 
 
     return ctx.db.subscription.callRequest({
       where,
       ...other
     }, info)
-      .then(r => {
-        // console.log("callRequest subs result", r);
-        return r;
-      })
-      .catch(e => {
-        console.log(e);
-        throw (e)
-      });
+    // .then(r => {
+    //   // console.log("callRequest subs result", r);
+    //   return r;
+    // })
+    // .catch(e => {
+    //   console.log(e);
+    //   throw (e)
+    // });
 
     // const sub = ctx.db.subscription['call']({}, info);
     // const sub = ctx.db.subscription.call({}, info);

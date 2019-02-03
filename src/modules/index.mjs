@@ -8,7 +8,7 @@ import PrismaModule from "@prisma-cms/prisma-module";
 import UserModule from "@prisma-cms/user-module";
 import SocietyModule from "@prisma-cms/society-module";
 
-import CallModule from "./call";
+// import CallModule from "./call";
 import CallRequestModule from "./callRequest";
 
 import MergeSchema from 'merge-graphql-schemas';
@@ -38,7 +38,7 @@ class Module extends PrismaModule {
     this.mergeModules([
       UserModule,
       SocietyModule,
-      CallModule,
+      // CallModule,
       CallRequestModule,
     ]);
 
@@ -80,11 +80,19 @@ class Module extends PrismaModule {
         "ChatRoomUpdateInput",
         "ChatMessageCreateInput",
         "ChatMessageUpdateInput",
+
+        "ResourceCreateInput",
       ]);
-
+      
     }
-
-    let apiSchema = super.getApiSchema(types.concat(baseSchema), []);
+    
+    let apiSchema = super.getApiSchema(types.concat(baseSchema), [
+      // "ResourceCreateInput",
+      "UserCreateOneInput",
+      // "CallRequestCreateInput",
+      "CallRequestUpdateDataInput",
+      "ChatRoomCreateOneWithoutCallRequestsInput",
+    ]);
 
     let schema = fileLoader(__dirname + '/schema/api/', {
       recursive: true,

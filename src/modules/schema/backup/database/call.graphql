@@ -32,7 +32,7 @@ type Call {
   status: CallStatus! @default(value: "Requested")
 
 
-  Room: ChatRoom! @relation(name: "ChatRoomCall")
+  Room: ChatRoom! @relation(name: "ChatRoomCalls")
 
   # CallRequests: [CallRequest!]! @relation(name: "CallRequests", onDelete: CASCADE)
 

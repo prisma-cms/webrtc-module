@@ -2,15 +2,15 @@
 type Mutation {
 
 
-  # createCallProcessor(
-  #   to: ID!
-  #   data: CallCreateInput
-  # ): CallResponse!
+  createCallProcessor(
+    to: ID!
+    data: CallCreateInput
+  ): CallResponse!
 
-  # updateCallProcessor(
-  #   data: CallUpdateInput!
-  #   where: CallWhereUniqueInput!
-  # ): CallResponse!
+  updateCallProcessor(
+    data: CallUpdateInput!
+    where: CallWhereUniqueInput!
+  ): CallResponse!
 
 
   createCallRequestProcessor(

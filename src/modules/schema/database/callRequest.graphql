@@ -4,14 +4,15 @@ type CallRequest{
   id: ID! @unique
   called_descriptions: Json!
   caller_descriptions: Json!
-  status: CallRequestStatus!
+  status: CallRequestStatus @default(value: Created)
   startedAt: DateTime
   endedAt: DateTime
 
   Called: User! @relation(name: "CallRequestCalled", onDelete: CASCADE)
-  Caller: User! @relation(name: "CallRequestCaller", onDelete: CASCADE)
+  Caller: User @relation(name: "CallRequestCaller", onDelete: CASCADE)
 
-  Call: Call! @relation(name: "CallRequests", onDelete: CASCADE)
+  Room: ChatRoom
+  # Call: Call! @relation(name: "CallRequests", onDelete: CASCADE)
   # Transaction: CallTransaction @relation (name: "CallTransactionCallRequests", onDelete: SET_NULL)
 }
 

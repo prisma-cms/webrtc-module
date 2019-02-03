@@ -6,11 +6,14 @@ type CallRequestResponse{
   data: CallRequest
 }
 
-input AnswerInput {
-  offer: Json
-  answer: Json
-  sdp: Json
-}
+
+# input CallRequestCreateInput {
+#   called_descriptions: Json!
+#   caller_descriptions: Json!
+#   callId: ID!
+#   calledId: ID!
+# }
+
 
 input CallRequestDataInput{
   status:CallRequestStatus
@@ -21,3 +24,7 @@ input CallRequestUpdateDataInput{
   answer: AnswerInput
 }
 
+input ChatRoomCreateOneWithoutCallRequestsInput {
+  # create: ChatRoomCreateWithoutCallRequestsInput
+  connect: ChatRoomWhereUniqueInput
+}

@@ -1,0 +1,7 @@
+
+type IceCandidate{
+  from: String!
+  to: String!
+  sdp: Json!
+  callRequestId: String!
+}

@@ -1,0 +1,6 @@
+
+input AnswerInput {
+  offer: Json
+  answer: Json
+  sdp: Json
+}
