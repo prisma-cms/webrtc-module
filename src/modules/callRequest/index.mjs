@@ -521,14 +521,12 @@ class CallRequestProcessor extends PrismaProcessor {
   async createSelectCondition(args, info) {
 
 
-    const currentUser = await this.getUser(true);
-
-    console.log(chalk.green("createSelectCondition currentUser"), currentUser);
+    const currentUser = await this.getUser();
 
     const {
       id: currentUserId,
       // sudo,
-    } = currentUser;
+    } = currentUser || {};
 
 
     let {
@@ -537,17 +535,24 @@ class CallRequestProcessor extends PrismaProcessor {
     } = args;
 
 
-    where = {
-      ...where,
-      OR: [{
-        Called: {
-          id: currentUserId,
-        }
-      }, {
-        Caller: {
-          id: currentUserId
-        }
-      }]
+    if (currentUserId) {
+      where = {
+        ...where,
+        OR: [{
+          Called: {
+            id: currentUserId,
+          }
+        }, {
+          Caller: {
+            id: currentUserId
+          }
+        }]
+      }
+    }
+    else {
+      where = {
+        id: "-null",
+      }
     }
 
 
