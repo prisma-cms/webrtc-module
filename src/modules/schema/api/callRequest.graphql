@@ -28,3 +28,12 @@ input ChatRoomCreateOneWithoutCallRequestsInput {
   # create: ChatRoomCreateWithoutCallRequestsInput
   connect: ChatRoomWhereUniqueInput
 }
+
+input ChatRoomUpdateOneWithoutCallRequestsInput {
+  # create: ChatRoomCreateWithoutCallRequestsInput
+  connect: ChatRoomWhereUniqueInput
+  disconnect: Boolean
+  # delete: Boolean
+  # update: ChatRoomUpdateWithoutCallRequestsDataInput
+  # upsert: ChatRoomUpsertWithoutCallRequestsInput
+}

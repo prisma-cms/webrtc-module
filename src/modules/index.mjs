@@ -92,6 +92,7 @@ class Module extends PrismaModule {
       // "CallRequestCreateInput",
       "CallRequestUpdateDataInput",
       "ChatRoomCreateOneWithoutCallRequestsInput",
+      "ChatRoomUpdateOneWithoutCallRequestsInput",
     ]);
 
     let schema = fileLoader(__dirname + '/schema/api/', {
