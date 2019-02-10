@@ -47,12 +47,7 @@ class CallRequestProcessor extends PrismaProcessor {
 
   async create(objectType, args, info) {
 
-
-
-
     // console.log(chalk.green("createCallRequest ctx request", ctx.request));
-
-
 
     const {
       ctx,
@@ -64,7 +59,12 @@ class CallRequestProcessor extends PrismaProcessor {
     } = ctx
 
 
-    this.setRequestTimeLimit(300);
+    /**
+     * Надо выставить большой период ожидания, потому что запрос 
+     * весит до окончания разговора, чтобы при разрыве выполнить окончательную запись.
+     * Если соединение разрывается - звонок должен завершиться.
+     */
+    this.setRequestTimeLimit(36000);
 
     // return new Promise(() => {
 
