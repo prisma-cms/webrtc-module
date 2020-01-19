@@ -1,7 +1,9 @@
 
 
 type CallRequest{
-  id: ID! @unique
+  id: ID! @unique @id
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
   called_descriptions: Json!
   caller_descriptions: Json!
   status: CallRequestStatus @default(value: Created)

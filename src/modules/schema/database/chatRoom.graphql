@@ -1,6 +1,5 @@
 
 type ChatRoom {
-  id: ID! @unique
   # Calls: [Call!]! @relation(name: "ChatRoomCalls", onDelete: CASCADE)
   CallRequests: [CallRequest!]!
 }

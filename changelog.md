@@ -1,3 +1,7 @@
+1.3.4
+===============================
+- Update schema
+
 1.3.3
 ===============================
 - Set createCallRequest timeout 36000 seconds
